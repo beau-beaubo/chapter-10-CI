@@ -66,4 +66,6 @@ jobs:
       # Expands the configuration template and deploys the microservice.
       #
       - name: Deploy
-        run: ./scripts/cd/deploy.sh
+        run: |
+          ./scripts/cd/deploy.sh
+          echo "Hello world"

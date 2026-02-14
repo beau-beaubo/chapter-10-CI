@@ -11,6 +11,7 @@ const PORT = process.env.PORT;
 //
 // Application entry point.
 //
+console.log("Starting microservice...");
 async function main() {
     const app = express();
 
