@@ -21,6 +21,27 @@ async function main() {
     app.use(express.static("public"));
 
     //
+    // Proxy requests to the advertise microservice.
+    // This allows the browser to load ad images via the gateway.
+    //
+    app.get(/^\/api\/advertise\/(.+)/, async (req, res) => {
+        const subPath = req.params[0];
+
+        const response = await axios({
+            method: "GET",
+            url: `http://advertise/${subPath}`,
+            responseType: "stream",
+            validateStatus: () => true,
+        });
+
+        res.status(response.status);
+        if (response.headers && response.headers["content-type"]) {
+            res.setHeader("content-type", response.headers["content-type"]);
+        }
+        response.data.pipe(res);
+    });
+
+    //
     // Main web page that lists videos.
     //
     app.get("/", async (req, res) => {
@@ -68,6 +89,21 @@ async function main() {
 
         // Renders the history for display in the browser.
         res.render("history", { videos: historyResponse.data.history });
+    });
+
+    //
+    // Web page to show the advertise cards.
+    //
+    app.get("/advertise", async (req, res) => {
+
+        const adsResponse = await axios.get("http://advertise/ads");
+        const ads = (adsResponse.data.ads || []).map(ad => ({
+            name: ad.name,
+            url: ad.url,
+            imageUrl: `/api/advertise${ad.imagePath}`,
+        }));
+
+        res.render("advertise", { ads });
     });
 
     //

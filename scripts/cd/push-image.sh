@@ -21,4 +21,4 @@ set -u # or set -o nounset
 : "$NAME"
 
 echo $REGISTRY_PW | docker login $CONTAINER_REGISTRY --username $REGISTRY_UN --password-stdin
-docker push $CONTAINER_REGISTRY/$NAME:$VERSION
+echo "Image push handled by build-image.sh (docker buildx --push)."

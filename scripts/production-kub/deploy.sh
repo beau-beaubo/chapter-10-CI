@@ -10,28 +10,27 @@ set -u # or set -o nounset
 : "$CONTAINER_REGISTRY"
 
 #
+# If you're building from Apple Silicon (ARM64) for AKS (typically AMD64),
+# you must build linux/amd64 images.
+#
+PLATFORM=${PLATFORM:-linux/amd64}
+
+#
 # Build Docker images.
 #
-docker build -t $CONTAINER_REGISTRY/metadata:1 --file ../../metadata/Dockerfile-prod ../../metadata
-docker push $CONTAINER_REGISTRY/metadata:1
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/metadata:1 --push --file ../../metadata/Dockerfile-prod ../../metadata
 
-docker build -t $CONTAINER_REGISTRY/history:1 --file ../../history/Dockerfile-prod ../../history
-docker push $CONTAINER_REGISTRY/history:1
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/history:1 --push --file ../../history/Dockerfile-prod ../../history
 
-docker build -t $CONTAINER_REGISTRY/mock-storage:1 --file ../../mock-storage/Dockerfile-prod ../../mock-storage
-docker push $CONTAINER_REGISTRY/mock-storage:1
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/mock-storage:1 --push --file ../../mock-storage/Dockerfile-prod ../../mock-storage
 
-docker build -t $CONTAINER_REGISTRY/history:1 --file ../../history/Dockerfile-prod ../../history
-docker push $CONTAINER_REGISTRY/history:1
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/video-streaming:1 --push --file ../../video-streaming/Dockerfile-prod ../../video-streaming
 
-docker build -t $CONTAINER_REGISTRY/video-streaming:1 --file ../../video-streaming/Dockerfile-prod ../../video-streaming
-docker push $CONTAINER_REGISTRY/video-streaming:1
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/video-upload:1 --push --file ../../video-upload/Dockerfile-prod ../../video-upload
 
-docker build -t $CONTAINER_REGISTRY/video-upload:1 --file ../../video-upload/Dockerfile-prod ../../video-upload
-docker push $CONTAINER_REGISTRY/video-upload:1
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/gateway:1 --push --file ../../gateway/Dockerfile-prod ../../gateway
 
-docker build -t $CONTAINER_REGISTRY/gateway:1 --file ../../gateway/Dockerfile-prod ../../gateway
-docker push $CONTAINER_REGISTRY/gateway:1
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/advertise:1 --push --file ../../advertise/Dockerfile-prod ../../advertise
 
 # 
 # Deploy containers to Kubernetes.
@@ -46,3 +45,4 @@ envsubst < mock-storage.yaml | kubectl apply -f -
 envsubst < video-streaming.yaml | kubectl apply -f -
 envsubst < video-upload.yaml | kubectl apply -f -
 envsubst < gateway.yaml | kubectl apply -f -
+envsubst < advertise.yaml | kubectl apply -f -

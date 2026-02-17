@@ -120,6 +120,23 @@ services:
       - rabbit
     restart: "no"
 
+  advertise:
+    image: advertise
+    build:
+      context: ./advertise
+      dockerfile: Dockerfile-dev
+    container_name: advertise
+    volumes:
+      - /tmp/advertise/npm-cache:/root/.npm:z
+      - ./advertise/src:/usr/src/app/src:z
+      - ./advertise/public:/usr/src/app/public:z
+    ports:
+     - "4003:80"
+    environment:
+      - PORT=80
+      - NODE_ENV=development
+    restart: "no"
+
   # 
   # Uncomment this service to enable cloud storage.
   #

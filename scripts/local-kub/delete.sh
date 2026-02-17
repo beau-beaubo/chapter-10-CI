@@ -18,3 +18,4 @@ kubectl delete -f mock-storage.yaml
 kubectl delete -f video-streaming.yaml
 kubectl delete -f video-upload.yaml
 kubectl delete -f gateway.yaml
+kubectl delete -f advertise.yaml

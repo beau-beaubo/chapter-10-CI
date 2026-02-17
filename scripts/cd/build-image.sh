@@ -19,4 +19,6 @@ set -u # or set -o nounset
 : "$NAME"
 : "$DIRECTORY"
 
-docker build -t $CONTAINER_REGISTRY/$NAME:$VERSION --file ./$DIRECTORY/Dockerfile-prod ./$DIRECTORY
+PLATFORM=${PLATFORM:-linux/amd64}
+
+docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/$NAME:$VERSION --push --file ./$DIRECTORY/Dockerfile-prod ./$DIRECTORY

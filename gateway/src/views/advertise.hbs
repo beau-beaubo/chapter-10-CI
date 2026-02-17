@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
 
-        <title>FlixTube: Home</title>
+        <title>FlixTube: Advertise</title>
 
         <link rel="stylesheet" href="css/tailwind.min.css">
         <link rel="stylesheet" href="css/app.css">
@@ -15,7 +15,7 @@
                     <div class="text-xl font-bold">
                         FlixTube
                     </div>
-                    <div class="ml-16 border-b-2 border-blue-600">
+                    <div class="ml-16">
                         <a href="/">Videos</a>
                     </div>
                     <div class="ml-4">
@@ -24,24 +24,24 @@
                     <div class="ml-4">
                         <a href="/history">History</a>
                     </div>
-                    <div class="ml-4">
+                    <div class="ml-4 border-b-2 border-blue-600">
                         <a href="/advertise">Advertise</a>
                     </div>
                 </div>
             </div>
 
             <div class="m-4">
-                <h1>Videos</h1>
-                <div id="video-list" class="m-4">
-                    {{#if videos}}
-                        {{#each videos}}
-                            <div class="mt-1">
-                                <a href="/video?id={{this._id}}">{{this.name}}</a> 
+                <h1>Advertise</h1>
+                <div class="m-4 grid grid-cols-1 gap-4">
+                    {{#each ads}}
+                        <a class="border-2 p-2 bg-white" href="{{this.url}}" target="_blank" rel="noreferrer">
+                            <div class="font-bold">{{this.name}}</div>
+                            <div class="mt-2">
+                                <img class="w-full h-40 object-contain" src="{{this.imageUrl}}"/>
                             </div>
-                        {{/each}}
-                    {{else}}
-                        No videos uploaded yet.
-                    {{/if}}
+                            <div class="mt-2 text-sm">{{this.url}}</div>
+                        </a>
+                    {{/each}}
                 </div>
             </div>
         </div>
