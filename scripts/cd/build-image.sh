@@ -8,12 +8,15 @@
 #   NAME - The name of the image to build.
 #   DIRECTORY - The directory form which to build the image.
 #
+# Note:
+#   This script only builds the image locally. Publishing is handled by push-image.sh.
+#
 # Usage:
 #
 #       ./scripts/cd/build-image.sh
 #
 
-set -u # or set -o nounset
+set -euo pipefail
 : "$CONTAINER_REGISTRY"
 : "$VERSION"
 : "$NAME"
@@ -21,4 +24,8 @@ set -u # or set -o nounset
 
 PLATFORM=${PLATFORM:-linux/amd64}
 
-docker buildx build --platform $PLATFORM -t $CONTAINER_REGISTRY/$NAME:$VERSION --push --file ./$DIRECTORY/Dockerfile-prod ./$DIRECTORY
+docker buildx build --platform "$PLATFORM" \
+	-t "$CONTAINER_REGISTRY/$NAME:$VERSION" \
+	--load \
+	--file "./$DIRECTORY/Dockerfile-prod" \
+	"./$DIRECTORY"
